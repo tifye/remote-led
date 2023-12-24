@@ -1,6 +1,0 @@
-version: "3"
-
-tasks:
-  run:
-    desc: Basic poetry run on src/main.py
-    cmd: poetry run python ./src/main.py
