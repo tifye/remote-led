@@ -1,0 +1,15 @@
+version: "3"
+
+tasks:
+  templ-gen:
+    cmd: templ generate
+
+  tailwind-watch:
+    cmd: npm run tailwind:watch
+
+  run:
+    deps: [templ-gen]
+    cmd: BACKEND=http://raspberry:5000 PORT=9000 go run main.go
+
+  serve:
+    deps: [tailwind-watch, run]
