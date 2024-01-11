@@ -12,6 +12,10 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
+const (
+	regPerSec = 20
+)
+
 var (
 	port string
 )
@@ -26,6 +30,7 @@ func init() {
 func main() {
 	e := echo.New()
 
+	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(regPerSec)))
 	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
 		Root:   "assets",
 		Browse: false,
