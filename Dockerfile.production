@@ -11,6 +11,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /entrypoint
 # Build Tailwind
 FROM node:14-alpine AS tailwind-build
 WORKDIR /
+COPY --from=go-build /app/view /view
 COPY /frontend-src/tailwind-input.css input.css
 COPY tailwind.config.js tailwind.config.js
 RUN npx tailwindcss -i input.css -o output.css
