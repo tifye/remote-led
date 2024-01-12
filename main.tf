@@ -1,10 +1,29 @@
+variable "project_id" {
+  type = string
+  sensitive = true
+}
+
+variable "artifact_repository_id" {
+  type = string
+  sensitive = true
+}
+
+variable "artifact_name" {
+  type = string
+  sensitive = true
+}
+
+variable "region" {
+  type = string
+}
+
 provider "google" {
-  project = "proj-delphinium"
+  project = var.project_id
 }
 
 resource "google_cloud_run_v2_service" "default" {
   name = "main"
-  location = "europe-west1"
+  location = var.region
   client = "terraform"
 
   template {
@@ -13,9 +32,13 @@ resource "google_cloud_run_v2_service" "default" {
     }
 
     containers {
-      image = "europe-west1-docker.pkg.dev/proj-delphinium/proj-delphinium/delphinium"
+      image = format("%s-docker.pkg.dev/%s/%s/%s", var.region, var.project_id, var.artifact_repository_id, var.artifact_name)
       ports {
         container_port = 9000
+      }
+      env {
+        name = "LED_SERVER_URL"
+        value = "${LED_SERVER_URL}"
       }
     }
   }
