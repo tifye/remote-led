@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "tailwind:watch": "tailwindcss -i ./frontend-src/tailwind-input.css -o ./assets/css/tailwind.css --watch"
+    "tailwind:watch": "tailwindcss -i ./frontend-src/tailwind-input.css -o ./assets/css/tailwind.css --watch",
+    "tailwind:build": "tailwindcss -i ./frontend-src/tailwind-input.css -o ./assets/css/tailwind.css"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.0"

@@ -7,9 +7,26 @@ tasks:
   tailwind-watch:
     cmd: npm run tailwind:watch
 
-  run:
-    deps: [templ-gen]
-    cmd: BACKEND=http://raspberry:5000 PORT=9000 go run main.go
+  tailwind-build:
+    cmd: npm run tailwind:build
 
   serve:
     deps: [tailwind-watch, run]
+
+  build-image:
+    cmd: docker build . --tag=delphinium:latest -f ./Dockerfile.production
+  
+  tag-image:
+    cmd: docker tag delphinium europe-west1-docker.pkg.dev/proj-delphinium/proj-delphinium/delphinium
+
+  push-image:
+    cmd: docker push europe-west1-docker.pkg.dev/proj-delphinium/proj-delphinium/delphinium
+
+  build-and-push-image:
+    cmds:
+      - task: build-image
+      - task: tag-image
+      - task: push-image
+
+  deploy:
+    cmd: gcloud run deploy main --image europe-west1-docker.pkg.dev/proj-delphinium/proj-delphinium/delphinium
