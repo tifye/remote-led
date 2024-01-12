@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/labstack/gommon/log"
 )
@@ -17,14 +16,6 @@ type RGB struct {
 	Blue  int `json:"blue"`
 }
 
-var (
-	url string
-)
-
-func init() {
-	url = os.Getenv("BACKEND")
-}
-
 func NewRGB(red, green, blue int) RGB {
 	return RGB{
 		Red:   red,
@@ -33,8 +24,18 @@ func NewRGB(red, green, blue int) RGB {
 	}
 }
 
-func Fill(ctx context.Context, rgb RGB) error {
-	url := fmt.Sprintf("%s/fill", url)
+type LedService struct {
+	remoteUrl string
+}
+
+func NewLedService(ledServerUrl string) *LedService {
+	return &LedService{
+		remoteUrl: ledServerUrl,
+	}
+}
+
+func (sv *LedService) Fill(ctx context.Context, rgb RGB) error {
+	url := fmt.Sprintf("%s/fill", sv.remoteUrl)
 	b, err := json.Marshal(rgb)
 	if err != nil {
 		log.Errorf("failed to marshal request: %v", err)
@@ -50,8 +51,8 @@ func Fill(ctx context.Context, rgb RGB) error {
 	return nil
 }
 
-func IsOn(ctx context.Context) (bool, error) {
-	url := fmt.Sprintf("%s/isOn", url)
+func (sv *LedService) IsOn(ctx context.Context) (bool, error) {
+	url := fmt.Sprintf("%s/isOn", sv.remoteUrl)
 	res, err := http.Get(url)
 	if err != nil {
 		log.Errorf("failed to get request: %v", err)

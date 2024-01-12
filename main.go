@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/tifye/remote-led/core"
 	"github.com/tifye/remote-led/view"
 
@@ -17,17 +18,31 @@ const (
 )
 
 var (
-	port string
+	port         string
+	ledServerUrl string
+	ledService   *core.LedService
 )
 
 func init() {
+	if err := godotenv.Load(); err != nil {
+		log.Warnf("failed to load .env file")
+	}
+
 	port = os.Getenv("PORT")
 	if port == "" {
+		log.Printf("PORT env is not set, using default port 9000")
 		port = "9000"
+	}
+
+	ledServerUrl = os.Getenv("LED_SERVER_URL")
+	if ledServerUrl == "" {
+		log.Fatal("LED_SERVER_URL env is not set")
 	}
 }
 
 func main() {
+	ledService = core.NewLedService(ledServerUrl)
+
 	e := echo.New()
 
 	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(regPerSec)))
@@ -45,7 +60,7 @@ func main() {
 }
 
 func index(ctx echo.Context) error {
-	isOn, err := core.IsOn(context.Background())
+	isOn, err := ledService.IsOn(context.Background())
 	if err != nil {
 		log.Errorf("failed to get isOn: %v", err)
 		return err
@@ -56,7 +71,7 @@ func index(ctx echo.Context) error {
 }
 
 func turnOff(ctx echo.Context) error {
-	err := core.Fill(context.Background(), core.NewRGB(0, 0, 0))
+	err := ledService.Fill(context.Background(), core.NewRGB(0, 0, 0))
 	if err != nil {
 		log.Errorf("failed to fill: %v", err)
 		return err
@@ -67,7 +82,7 @@ func turnOff(ctx echo.Context) error {
 }
 
 func turnOn(ctx echo.Context) error {
-	err := core.Fill(context.Background(), core.NewRGB(255, 255, 255))
+	err := ledService.Fill(context.Background(), core.NewRGB(255, 255, 255))
 	if err != nil {
 		log.Errorf("failed to fill: %v", err)
 		return err
