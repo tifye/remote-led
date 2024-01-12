@@ -1,5 +1,10 @@
 version: "3"
 
+dotenv: ['.env']
+
+env:
+  ARTIFACT_URL: '{{ .GCP_REGION }}-docker.pkg.dev/{{ .GCP_PROJECT_ID }}/{{ .GCP_ARTIFACT_REGISTRY_ID }}/{{ .GCP_ARTIFACT_NAME }}'
+
 tasks:
   templ-gen:
     cmd: templ generate
@@ -14,13 +19,13 @@ tasks:
     deps: [tailwind-watch, run]
 
   build-image:
-    cmd: docker build . --tag=delphinium:latest -f ./Dockerfile.production
+    cmd: docker build . --tag=$GCP_ARTIFACT_NAME:latest -f ./Dockerfile.production
   
   tag-image:
-    cmd: docker tag delphinium europe-west1-docker.pkg.dev/proj-delphinium/proj-delphinium/delphinium
+    cmd: docker tag delphinium $ARTIFACT_URL
 
   push-image:
-    cmd: docker push europe-west1-docker.pkg.dev/proj-delphinium/proj-delphinium/delphinium
+    cmd: docker push $ARTIFACT_URL
 
   build-and-push-image:
     cmds:
@@ -29,9 +34,5 @@ tasks:
       - task: push-image
 
   deploy:
-    cmd: gcloud run deploy main --image europe-west1-docker.pkg.dev/proj-delphinium/proj-delphinium/delphinium
-
-  tf-apply:
-    cmd: terraform apply -var-file="secret.tfvars"
-
+    cmd: gcloud run deploy main --image $ARTIFACT_URL
     
