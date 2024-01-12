@@ -189,4 +189,4 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-assests/css/tailwind.css
+assets/css/tailwind.css
