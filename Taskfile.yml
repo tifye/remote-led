@@ -30,3 +30,8 @@ tasks:
 
   deploy:
     cmd: gcloud run deploy main --image europe-west1-docker.pkg.dev/proj-delphinium/proj-delphinium/delphinium
+
+  tf-apply:
+    cmd: terraform apply -var-file="secret.tfvars"
+
+    
