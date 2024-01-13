@@ -25,7 +25,7 @@ templ OnButton(isOn bool) {
 	<button
 		id="on-button"
 		data-on={ strconv.FormatBool(isOn) }
-		class="border-4 border-zinc-700 text-zinc-700 data-[on=true]:text-zinc-200 data-[on=true]:border-zinc-200 rounded-md flex flex-col justify-center items-center"
+		class="border-4 border-zinc-700 text-zinc-700 data-[on=true]:text-amber-500 data-[on=true]:border-amber-500 rounded-md flex flex-col justify-center items-center"
 		hx-post="/actions/on"
 		hx-trigger="click"
 		hx-swap="innerHTML"
@@ -39,7 +39,7 @@ templ OffButton(isOn bool) {
 	<button
 		id="off-button"
 		data-on={ strconv.FormatBool(isOn) }
-		class="border-4 border-zinc-700 text-zinc-700 data-[on=false]:text-zinc-200 data-[on=false]:border-zinc-200 rounded-md flex flex-col justify-center items-center"
+		class="border-4 border-zinc-700 text-zinc-700 data-[on=false]:text-violet-800 data-[on=false]:border-violet-800 rounded-md flex flex-col justify-center items-center"
 		hx-post="/actions/off"
 		hx-trigger="click"
 		hx-swap="innerHTML"
