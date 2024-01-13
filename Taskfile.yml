@@ -14,6 +14,9 @@ tasks:
       - cmd: air -c ./.air.toml
         platforms: [darwin]
 
+  run:
+    cmd: go run main.go
+
   templ-gen:
     cmd: templ generate
 
@@ -22,12 +25,6 @@ tasks:
 
   tailwind-build:
     cmd: npm run tailwind:build
-
-  run:
-    cmd: go run main.go
-
-  serve:
-    deps: [tailwind-watch, run]
 
   build-image:
     cmd: docker build . --tag=$GCP_ARTIFACT_NAME:latest -f ./Dockerfile.production
