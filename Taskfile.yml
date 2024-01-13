@@ -15,6 +15,9 @@ tasks:
   tailwind-build:
     cmd: npm run tailwind:build
 
+  run:
+    cmd: go run main.go
+
   serve:
     deps: [tailwind-watch, run]
 
