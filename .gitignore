@@ -190,3 +190,5 @@ override.tf.json
 terraform.rc
 
 assets/css/tailwind.css
+
+tmp

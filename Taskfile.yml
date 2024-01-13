@@ -6,6 +6,14 @@ env:
   ARTIFACT_URL: '{{ .GCP_REGION }}-docker.pkg.dev/{{ .GCP_PROJECT_ID }}/{{ .GCP_ARTIFACT_REGISTRY_ID }}/{{ .GCP_ARTIFACT_NAME }}'
 
 tasks:
+  dev:
+    desc: Serve app with hot reloading enabled
+    cmds:
+      - cmd: air -c ./.air.toml --build.full_bin "./tmp/main.exe" --build.cmd "go build -o ./tmp/main.exe ."
+        platforms: [windows]
+      - cmd: air -c ./.air.toml
+        platforms: [darwin]
+
   templ-gen:
     cmd: templ generate
 
